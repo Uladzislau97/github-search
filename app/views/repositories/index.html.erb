@@ -1,0 +1,60 @@
+<div class="container my-5">
+  <%= form_with url: root_path, method: :get do |form| %>
+    <%= form.text_field :q, class: 'form-control w-50 mb-3' %>
+    <%= form.submit 'Search', class: 'btn btn-primary mb-5' %>
+  <% end %>
+
+  <% if @error %>
+    <div class="alert alert-danger" role="alert">
+      <%= @error %>
+    </div>
+  <% end %>
+
+  <% if @data %>
+    <div class="list-group">
+      <% @data[:items].each do |repo| %>
+        <a href="<%= repo['html_url'] %>" class="list-group-item">
+          <%= repo['full_name'] %>
+        </a>
+      <% end %>
+    </div>
+
+    <nav aria-label="Page navigation example mt-5">
+      <ul class="pagination">
+        <% if @data[:page] != 1 %>
+          <li class="page-item">
+            <a class="page-link" href="/?q=<%= @data[:q] %>&page=1">
+              First
+            </a>
+          </li>
+        <% end %>
+        <% if @data[:page] > 1 %>
+          <li class="page-item">
+            <a class="page-link" href="/?q=<%= @data[:q] %>&page=<%= @data[:page] - 1 %>">
+              <%= @data[:page] - 1 %>
+            </a>
+          </li>
+        <% end %>
+        <li class="page-item active">
+          <a class="page-link" href="/?q=<%= @data[:q] %>&page=<%= @data[:page] %>">
+            <%= @data[:page] %>
+          </a>
+        </li>
+        <% if @data[:page] < @data[:total_pages] %>
+          <li class="page-item">
+            <a class="page-link" href="/?q=<%= @data[:q] %>&page=<%= @data[:page] + 1 %>">
+              <%= @data[:page] + 1 %>
+            </a>
+          </li>
+        <% end %>
+        <% if @data[:page] != @data[:total_pages] %>
+          <li class="page-item">
+            <a class="page-link" href="/?q=<%= @data[:q] %>&page=<%= @data[:total_pages] %>">
+              Last
+            </a>
+          </li>
+        <% end %>
+      </ul>
+    </nav>
+  <% end %>
+</div>
